@@ -7,15 +7,13 @@ import { first } from 'rxjs';
 describe('PaginationComponent', () => {
   let component: PaginationComponent;
   let fixture: ComponentFixture<PaginationComponent>;
-  // If we do want to mock a service (maybe because it is very complex)
-  // we can do this
-  const mockUtilServce = { range: () => [1, 2, 3, 4, 5] };
+  const mockUtilsService = {
+    range: () => [1, 2, 3, 4, 5],
+  };
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [PaginationComponent],
-      // we DO NOT need to mock services if the don't
-      // dramatically change component behavior
-      providers: [{ provide: UtilsService, useValue: mockUtilServce }],
+      providers: [{ provide: UtilsService, useValue: mockUtilsService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PaginationComponent);
@@ -26,7 +24,7 @@ describe('PaginationComponent', () => {
     fixture.detectChanges();
   });
 
-  it('creates a component', () => {
+  it('creates component', () => {
     expect(component).toBeTruthy();
   });
 
@@ -36,7 +34,6 @@ describe('PaginationComponent', () => {
     );
 
     expect(pageContainers.length).toBe(5);
-    // The 'nativeElement' prints the DOM node when the test fails
     expect(pageContainers[0].nativeElement.textContent).toContain('1');
   });
 
@@ -46,13 +43,10 @@ describe('PaginationComponent', () => {
     );
     let clickedPage: number | undefined;
 
-    // we take only the first event that is emitted .pipe(first())
-    component.pageChangeEvent.pipe(first()).subscribe(page => {
+    component.pageChangeEvent.pipe(first()).subscribe((page) => {
       clickedPage = page;
     });
-    pageContainers[0].nativeElement.click();
-    // pageContainers[0].triggerEventHandler('click'); // this is valid too
-
+    pageContainers[0].triggerEventHandler('click');
     expect(clickedPage).toEqual(1);
   });
 });
